@@ -1,4 +1,4 @@
-import { IconDeviceFloppy, IconEdit, IconTrash } from '@tabler/icons-react'
+import { IconDeviceFloppy, IconEdit, IconTrash, IconX } from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
 
 const Card = ({ tasks, setTasks, item, editTask, deleteTask }) => {
@@ -92,6 +92,13 @@ const Card = ({ tasks, setTasks, item, editTask, deleteTask }) => {
               onClick={() => handleEdit(item)}
             >
               <IconDeviceFloppy stroke={1.5} color='#0056b3' />
+            </span>
+            <span
+              className='ms-auto'
+              style={{ cursor: 'pointer' }}
+              onClick={() => showEdit()}
+            >
+              <IconX stroke={1.5} color='red' />
             </span>
           </>
         )}
