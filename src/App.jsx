@@ -4,8 +4,11 @@ import AddTask from './components/AddTask'
 import Cards from './components/Cards'
 import { createTask, deleteTask, getTasks, updateTask } from './services/TaskServices'
 import Loader from './components/Loader'
+import { ToastContainer, toast } from 'react-toastify'
 
 function App() {
+  const Error = (text) => toast.error(text, { autoClose: 5000 })
+  const Success = (text) => toast.success(text, { autoClose: 2000 })
   const [isLoading, setIsLoading] = useState(true)
   const [tasks, setTasks] = useState([])
   // Shows AddTask component
@@ -13,6 +16,8 @@ function App() {
 
   useEffect(() => {
     obtenerTasks()
+
+    // eslint-disable-next-line
   }, [])
 
   const obtenerTasks = async () => {
@@ -27,9 +32,11 @@ function App() {
       })
       setTasks(lowerCaseTasks)
       setIsLoading(false)
+      Success('Tasks obteined successfully')
     } catch (error) {
       setIsLoading(false)
       console.error(error)
+      Error('Error getting tasks')
     }
   }
 
@@ -37,12 +44,17 @@ function App() {
     try {
       const newTask = { title: task, completed: false }
       const resp = await createTask(newTask)
+      console.log('🚀 ~ newTask ~ resp:', resp)
       // Obtener el id de la tarea creada
-      setTasks([
-        ...tasks,
-        { id: resp.data.id, title: resp.data.title, completed: resp.data.completed },
-      ])
+      if (resp.status === 201 || resp.status === 200) {
+        setTasks([
+          ...tasks,
+          { id: resp.data.id, title: resp.data.title, completed: resp.data.completed },
+        ])
+      }
+      Success('Task created successfully')
     } catch (error) {
+      Error('Error creating task')
       console.error(error)
     }
   }
@@ -62,7 +74,9 @@ function App() {
 
       await updateTask(item)
       setTasks(newTasks)
+      Success('Task updated successfully')
     } catch (error) {
+      Error('Error updating task')
       console.error(error)
     }
   }
@@ -71,7 +85,9 @@ function App() {
     try {
       await deleteTask(id)
       setTasks(tasks.filter((task) => task.id !== id))
+      Success('Task deleted successfully')
     } catch (error) {
+      Error('Error deleting task')
       console.error(error)
     }
   }
@@ -108,6 +124,7 @@ function App() {
           )}
         </div>
       )}
+      <ToastContainer />
     </>
   )
 }

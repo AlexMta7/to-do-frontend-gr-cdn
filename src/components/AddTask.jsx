@@ -1,8 +1,12 @@
+import { toast } from 'react-toastify'
+
 const AddTask = ({ onClick, setAddTask }) => {
+  const Warning = (text) => toast.warn(text, { autoClose: 5000 })
+
   const addTask = () => {
     const txtText = document.getElementById('txtText')
     if (txtText.value.trim() === '') {
-      alert('Please enter a title')
+      Warning('Please enter a title')
       return
     }
 
