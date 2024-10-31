@@ -3,8 +3,10 @@ import AddButton from './components/AddButton'
 import AddTask from './components/AddTask'
 import Cards from './components/Cards'
 import { createTask, deleteTask, getTasks, updateTask } from './services/TaskServices'
+import Loader from './components/Loader'
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true)
   const [tasks, setTasks] = useState([])
   // Shows AddTask component
   const [addTask, setAddTask] = useState(false)
@@ -24,7 +26,9 @@ function App() {
         return newObj
       })
       setTasks(lowerCaseTasks)
+      setIsLoading(false)
     } catch (error) {
+      setIsLoading(false)
       console.error(error)
     }
   }
@@ -79,24 +83,32 @@ function App() {
   console.log(tasks)
 
   return (
-    <div className='container d-flex flex-wrap p-4 gap-3'>
-      {tasks.length === 0 && (
-        <div className='pt-5 ps-5'>
-          <h1>Create a new task to begin</h1>
+    <>
+      {isLoading ? (
+        <div className='d-flex justify-content-center align-items-center h-100 w-100 mt-5'>
+          <Loader />
+        </div>
+      ) : (
+        <div className='container d-flex flex-wrap p-4 gap-3'>
+          {tasks.length === 0 && (
+            <div className='pt-5 ps-5'>
+              <h1>Create a new task to begin</h1>
+            </div>
+          )}
+          <Cards
+            tasks={tasks}
+            setTasks={setTasks}
+            editTask={editTask}
+            deleteTask={deleteTaskById}
+          />
+          {addTask ? (
+            <AddTask setAddTask={setAddTask} onClick={newTask} />
+          ) : (
+            <AddButton onClick={handleShowAdd} />
+          )}
         </div>
       )}
-      <Cards
-        tasks={tasks}
-        setTasks={setTasks}
-        editTask={editTask}
-        deleteTask={deleteTaskById}
-      />
-      {addTask ? (
-        <AddTask setAddTask={setAddTask} onClick={newTask} />
-      ) : (
-        <AddButton onClick={handleShowAdd} />
-      )}
-    </div>
+    </>
   )
 }
 
