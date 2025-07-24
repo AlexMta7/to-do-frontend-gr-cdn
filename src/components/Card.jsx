@@ -58,7 +58,13 @@ const Card = ({ tasks, setTasks, item, editTask, deleteTask }) => {
                 editTask(item)
               }}
             />
-            <h5 className='card-title m-0'>{item?.title}</h5>
+            <h5
+              className={`card-title m-0 ${
+                item?.completed ? 'text-decoration-line-through' : ''
+              }`}
+            >
+              {item?.title}
+            </h5>
             {/* Edit */}
             <span
               className='ms-auto'
